@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class=" container">
+    
+    <div class="row">
+        
+        
+    </div>
+    <br><br><br><br><br>
+    
+
+<div class="row">
+        
+<!--Form without header-->
+<div class="col-md-4"></div>
+<div class="card col-md-4">
+    <div class="card-block">
+
+        <!--Header-->
+        <div class="text-center">
+            <h3><i class="fa fa-weixin" aria-hidden="true" style="color: dodgerblue"></i>  FlaskChat</h3>
+            <hr class="mt-2 mb-2">
+        </div>
+
+        <!--Body-->
+        <form method="POST">
+        <div class="md-form">
+            {{ form.csrf_token }}
+            <i class="fa fa-user prefix"></i>
+            {{form.username}}
+            <label for="form2">Imię</label>
+            
+        </div>
+        
+
+
+        <div class="text-center">
+            <button class="btn btn-primary">Start</button>{{chat_uid}}
+        </div>
+        </form>
+
+    </div>
+
+    <!--Footer-->
+    <div class="modal-footer">
+        <div class="options">
+            <p>W celu skorzystania z serwisu wpisz nazwę użytkownika i wybierz język edytora.</p>
+            
+        </div>
+    </div>
+
+</div>
+<!--/Form without header-->
+
+<div class="col-md-4"></div>
+    </div>
+       
+</div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='js/src/ace.js')}}" type="text/javascript" charset="utf-8"></script>
+<div class=" container-fluid">
+    <br>
+    <div class="row">
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            Użytkownik: {{ user }}! {% if 'username' in session %} <a href="{{url_for('logout')}}">(Wyloguj)</a>{% endif %} | Edytor: Python | ID: {{chat_uid}}
+        </div>
+        
+    </div>
+    
+
+<hr>
+    <br>
+ 
+    <div class="row">
+
+        
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <form method="POST">
+                {{ form.csrf_token }}
+                {{form.workspace}}
+                    <div id="editor">{{ content }}</div>
+                    
+   
+   
+    
+    
+    
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/white");
+        editor.session.setMode("ace/mode/python");
+
+        var input = $('textarea[name="workspace"]');
+        editor.getSession().on("change", function () {
+        input.val(editor.getSession().getValue());
+    });
+    </script>
+              
+               <button class="btn btn-primary">Dodaj</button>
+               </form>
+    
+        
+        </div>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="chatlog">
+                
+               
+               
+               
+
+           </div>
+           <input id="text" size="80" placeholder="Wpisz wiadomość">
+            <button id='sendmsg' class="btn btn-success">Wyślij</button>
+        </div>              
+    </div>   
+</div>
+
+
+{% endblock %}
