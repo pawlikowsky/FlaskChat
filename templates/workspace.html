@@ -7,7 +7,7 @@
     <div class="row">
        
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            User: {{ user }}! {% if 'username' in session %} <a href="{{url_for('logout')}}">(Logout)</a>{% endif %} | editor: {{editor}} | id: {{chat_uid}}
+            <span class="badge grey">user:</span> <span class="badge black">{{ user }}! {% if 'username' in session %} <a href="{{url_for('logout')}}">(Logout)</a></span>{% endif %} | <span class="badge grey">editor:</span> <span class="badge green"> {{editor}} </span> | <span class="badge grey">id:</span> <span class="badge blue">{{chat_uid}}</span>
         </div>
         
     </div>
