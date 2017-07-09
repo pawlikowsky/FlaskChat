@@ -27,7 +27,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit() and request.method == 'POST':
         chat_uid = ''.join(choice(ascii_letters) for i in range(12))
-        room = Chat(chat_uid)
+        room = Chat(chat_uid,form.language.data)
         user = User(form.username.data)
         db.session.add(room)
         db.session.add(user)
@@ -69,6 +69,7 @@ def czat(chat_uid):
     user = session['username']
     q = Chat.query.filter_by(chat_uid=chat_uid).first()
     content = q.content
+    editor = q.editor
     if q == None:
         print("q not found")
         return redirect(url_for('index'))
@@ -78,7 +79,7 @@ def czat(chat_uid):
     #     q.content = data
     #     db.session.commit()
     #     print('workspace added')
-    return render_template('workspace.html', chat_uid=chat_uid, user=user, form=form, content=content )
+    return render_template('workspace.html', chat_uid=chat_uid, user=user, form=form, content=content, editor=editor )
 
 
 @app.route('/id/<chat_uid>/add', methods=['GET', 'POST'])
@@ -93,6 +94,11 @@ def czat_add(chat_uid):
         return jsonify(data={'message': 'hello {}'.format(form.workspace.data)})
     return jsonify(data=form.errors)
     
+@app.route('/id/<chat_uid>/workspace', methods=['GET', 'POST'])
+def czat_workspace(chat_uid):
+    q = Chat.query.filter_by(chat_uid=chat_uid).first()
+    workspace = q.content
+    return jsonify(data={'workspace': workspace})
 
 
 

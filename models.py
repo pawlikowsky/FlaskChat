@@ -15,7 +15,7 @@ class Chat(db.Model):
     editor = db.Column(db.String(12))
     created = db.Column(db.DateTime, default=datetime.datetime.now)
 
-    def __init__(self, chat_uid=None, editor='Python', content=None):
+    def __init__(self, chat_uid=None, editor='python', content=None):
         self.chat_uid=chat_uid
         self.editor=editor
         self.content=content
