@@ -1,34 +1,34 @@
-from sqlalchemy import Column, Integer, String, DateTime, Date
-
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 import datetime
-from database import Base
 
-class Chat(Base):
-    __tablename__ = 'chat'
-    __table_args__ = {'extend_existing': True} 
-    id = Column(Integer, primary_key=True)
-    chat_uid = Column(String(12), unique=True)
-    content = Column(String)
-    created = Column(DateTime, default=datetime.datetime.now)
-    
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/code1.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
-    def __init__(self, chat_uid=None, content=None, convert_unicode=True):
-        self.chat_uid = chat_uid
-        self.content = content
+
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    chat_uid = db.Column(db.String(12), unique=True)
+    content = db.Column(db.String)
+    editor = db.Column(db.String(12))
+    created = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    def __init__(self, chat_uid=None, editor='Python', content=None):
+        self.chat_uid=chat_uid
+        self.editor=editor
+        self.content=content
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(120), unique=True)
+
+    def __init__(self, username, email=None):
+        self.username = username
+        self.email = email
 
     def __repr__(self):
-        return '<Chat %r>' % (self.chat_uid)
-
-
-
-class User(Base):
-    __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(10))
-
-    def __init__(self, name=None):
-        self.name =  name
-    
-    def __repr__(self):
-        return '<User %r>' % (self.name)
-
+        return '<User %r>' % self.username

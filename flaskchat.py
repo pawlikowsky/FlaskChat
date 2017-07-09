@@ -1,10 +1,10 @@
-from flask import Flask, render_template, session, url_for, request, redirect, abort
+from flask import Flask, render_template, session, url_for, request, redirect, abort, jsonify
 from random import choice
 from string import ascii_letters
-from database import db_session
 from forms import LoginForm, WorkspaceForm, JoinForm
-from models import Chat, User
+from models import Chat, User, db
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+
 
 
 app = Flask(__name__)
@@ -15,9 +15,11 @@ socketio = SocketIO(app)
 
 
 
+
+
 @app.teardown_appcontext
 def shutdiwb_session(exception=None):
-    db_session.remove()
+    db.session.remove()
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -27,9 +29,9 @@ def login():
         chat_uid = ''.join(choice(ascii_letters) for i in range(12))
         room = Chat(chat_uid)
         user = User(form.username.data)
-        db_session.add(room)
-        db_session.add(user)
-        db_session.commit()
+        db.session.add(room)
+        db.session.add(user)
+        db.session.commit()
 
         print('added db entry')
         session['logged_in'] = True
@@ -71,13 +73,26 @@ def czat(chat_uid):
         print("q not found")
         return redirect(url_for('index'))
     form = WorkspaceForm()
+    # if form.validate_on_submit():
+    #     data = form.workspace.data
+    #     q.content = data
+    #     db.session.commit()
+    #     print('workspace added')
+    return render_template('workspace.html', chat_uid=chat_uid, user=user, form=form, content=content )
+
+
+@app.route('/id/<chat_uid>/add', methods=['GET', 'POST'])
+def czat_add(chat_uid):
+    q = Chat.query.filter_by(chat_uid=chat_uid).first()
+    form = WorkspaceForm()
     if form.validate_on_submit():
         data = form.workspace.data
         q.content = data
-        db_session.commit()
+        db.session.commit()
         print('workspace added')
-    return render_template('workspace.html', chat_uid=chat_uid, user=user, form=form, content=content )
-
+        return jsonify(data={'message': 'hello {}'.format(form.workspace.data)})
+    return jsonify(data=form.errors)
+    
 
 
 
