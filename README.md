@@ -1,7 +1,7 @@
 # FlaskChat
 
 
-FlaskChat is simple but useful web application for colaboration code editing and syntax highlighting. Using SocketIO, Flask an SQlite.  
+FlaskChat is simple web application for colaborative code editing and syntax highlighting with live chat. Using SocketIO, Flask an SQlite.  
 
 
 
