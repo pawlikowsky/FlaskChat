@@ -4,10 +4,18 @@
 <script src="{{url_for('static', filename='js/src/ace.js')}}" type="text/javascript" charset="utf-8"></script>
 <div class=" container-fluid">
     <br>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'});
+    });
+</script>
     <div class="row">
        
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <span class="badge grey">user:</span> <span class="badge black">{{ user }}! {% if 'username' in session %} <a href="{{url_for('logout')}}">(Logout)</a></span>{% endif %} | <span class="badge grey">editor:</span> <span class="badge green"> {{editor}} </span> | <span class="badge grey">id:</span> <span class="badge blue">{{chat_uid}}</span>
+            <span class="badge grey">user:</span> <span class="badge black">{{ user }} {% if 'username' in session %} <a href="{{url_for('logout')}}">(Logout)</a></span>{% endif %} | <span class="badge grey">editor:</span> <span class="badge green"> {{editor}} </span> | <span class="badge grey">id:</span> <span class="badge blue">{{chat_uid}}</span>
         </div>
         
     </div>
@@ -71,22 +79,61 @@
         
         </div>
 
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+        
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div class="chatlog">
+            <div class="chatlog" id="log">
+        
                 
                
                
                
 
            </div>
-           <input id="text" size="80" placeholder="message">
-            <button id='sendmsg' class="btn btn-success">send</button>
+          
+           <input type='text' id="msgtext" size="80" placeholder="message">
+            
         </div>              
     </div>   
 </div>
 
+<script>
+    $(document).ready(function(){
+    socket = io.connect('127.0.0.1:5000/chat');
+    socket.on('connect', function() {
+        socket.emit('joined', {});
+    });
+    socket.on('status', function(data) {
+                    $('#log').append('<p class="chat-info">' + data.msg + '</p>');
+                    $('#log').scrollTop($('#log')[0].scrollHeight);
+                });
+    socket.on('message', function(data){
+        $('#log').append('<p>' + data.msg + '</p>');
+        $('#log').scrollTop($('#log')[0].scrollHeight);
+});
 
+ $('#msgtext').keypress(function(e) {
+                    var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        text = $('#msgtext').val();
+                        $('#msgtext').val('');
+                        socket.emit('text', {msg: text});
+                    }
+                });
+
+
+
+
+
+    
+});
+        </script>
+
+
+
+    <script>
+        var objDiv = document.getElementById("log");
+objDiv.scrollTop = objDiv.scrollHeight;
+    </script>
 
 
 {% endblock %}

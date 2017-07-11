@@ -48,13 +48,25 @@
         border-style: solid;
     }
 
-#text {
+#broadcast_data{
         height: 5vh;
         width: 100%;   
     }
 
 #workspace {
     display: none;
+}
+
+#log{
+    overflow: auto;
+    height: 75vh;
+    word-wrap: break-word;
+}
+
+.chat-info{
+    font-size: 14px;
+    font-style: italic;
+    color: gray;
 }
 
 
