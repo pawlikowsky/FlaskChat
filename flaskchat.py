@@ -87,7 +87,7 @@ def czat_add(chat_uid):
         q.content = data
         db.session.commit()
         print('workspace added')
-        return jsonify(data={'message': 'hello {}'.format(form.workspace.data)})
+        return jsonify(data={'message': '{}'.format(form.workspace.data)})
     return jsonify(data=form.errors)
 
 
@@ -107,13 +107,15 @@ def joined(message):
 @socketio.on('text', namespace='/chat')
 def text(message):
     room = session.get('chat_uid')
+    join_room(room)
     emit('message', {'msg':'<span class="badge grey">'+  session.get('username') + '</span> ' + message['msg'] }, room=room)
 
 
 @socketio.on('workspace', namespace='/chat')
 def workspace(message):
     room = session.get('chat_uid')
-    emit('message', {'msg': message['msg']}, room=room)
+    join_room(room)
+    emit('wtext', {'msg': message['msg']}, room=room)
 
 
 if __name__ == '__main__':
