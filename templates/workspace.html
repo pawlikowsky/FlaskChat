@@ -98,7 +98,7 @@
 
 <script>
     $(document).ready(function(){
-    socket = io.connect('127.0.0.1:5000/chat');
+    socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
     socket.on('connect', function() {
         socket.emit('joined', {});
     });
